@@ -26,10 +26,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   appTitle: {
-    padding: 100,
+    flex: 1,
+    paddingTop: 120,
     fontSize: 32
   },
   homeButtonContainer: {
-
+    flex: 2,
+    alignSelf: 'stretch',
   },
 });
