@@ -2,19 +2,19 @@ import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { StyleSheet, Text,  TouchableOpacity, View } from 'react-native';
 
-const  HomeScreen = ({ navigation }: Props) => {
+const  HomeScreen = ({ navigation }) => {
   return (
       <View style={styles.container}>
       <Text style={styles.appTitle}>CityPop</Text>
       <View style={styles.homeButtonContainer}>
         <TouchableOpacity 
-          onPress={() => console.log("Hej")}
+          onPress={() => navigation.navigate('CitySearch')}
           style={styles.touchables}
         >
             <Text>SEARCH BY CITY</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => console.log("Hej")}
+          onPress={() => navigation.navigate('CountrySearch')}
           style={styles.touchables}
         >
           <Text>SEARCH BY COUNTRY</Text>
