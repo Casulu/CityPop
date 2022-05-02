@@ -14,7 +14,7 @@ const  CitySearchScreen = ({ navigation }) => {
       <Text
         style={{
           flex: 1,
-          marginTop: '10%',
+          marginTop: '15%',
           fontSize: 32
         }}
       >
