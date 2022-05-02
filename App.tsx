@@ -10,23 +10,24 @@ const Stack = createNativeStackNavigator();
 //https://reactnavigation.org/docs/typescript/
 
 const App = () => {
+
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{ headerStyle: {backgroundColor: '#fff'} ,headerShadowVisible: false }}>
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{ title: ''}}
+          options={{title: ''}}
         />
         <Stack.Screen
           name="CitySearch"
           component={CitySearchScreen}
-          options={{ title: 'CityPop'}}
+          options={{title: 'CityPop'}}
         />
         <Stack.Screen
           name="CountrySearch"
           component={CountrySearchScreen}
-          options={{ title: 'CityPop'}}
+          options={{title: ''}}
         />
       </Stack.Navigator>
     </NavigationContainer>
