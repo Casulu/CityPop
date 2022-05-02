@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { StyleSheet, Text,  TouchableOpacity, View } from 'react-native';
