@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { StyleSheet, Text,  TouchableOpacity, View } from 'react-native';
@@ -34,9 +35,8 @@ const styles = StyleSheet.create({
   },
   appTitle: {
     flex: 1,
-    paddingTop: 120,
+    marginTop: 30,
     fontSize: 32
-    
   },
   homeButtonContainer: {
     flex: 2,
