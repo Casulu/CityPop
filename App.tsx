@@ -13,7 +13,11 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerStyle: {backgroundColor: '#fff'} ,headerShadowVisible: false }}>
+      <Stack.Navigator screenOptions={{ 
+        headerStyle: {backgroundColor: '#fff'},
+        headerShadowVisible: false, 
+        title: 'CityPop'}}
+      >
         <Stack.Screen
           name="Home"
           component={HomeScreen}
@@ -22,12 +26,10 @@ const App = () => {
         <Stack.Screen
           name="CitySearch"
           component={CitySearchScreen}
-          options={{title: 'CityPop'}}
         />
         <Stack.Screen
           name="CountrySearch"
           component={CountrySearchScreen}
-          options={{title: ''}}
         />
       </Stack.Navigator>
     </NavigationContainer>
