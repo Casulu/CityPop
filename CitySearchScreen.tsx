@@ -12,13 +12,15 @@ const  CitySearchScreen = ({ navigation }) => {
         CITY
       </Text>
       <View style={{flex: 2, alignSelf: 'stretch'}}>
-        <TextInput style={styles.input}/>
+        <View style={styles.inputView}>
+          <TextInput style={styles.input}/>
+        </View>
         <TouchableOpacity style={styles.searchButton}>
-        <Image 
-          source={require('./assets/magnifying-glass.png')} 
-          style={{flex: 1, width: 20, height: 20}}
-        />
-      </TouchableOpacity>
+            <Image 
+              source={require('./assets/magnifying-glass.png')} 
+              style={{flex: 1, width: '100%', aspectRatio: 1, margin: 10}}
+            />
+          </TouchableOpacity>
       </View>
       <StatusBar style="auto" />
     </View>
@@ -39,9 +41,6 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   inputView: {
-
-  },
-  input: {
     height: 50,
     fontSize: 25,
     margin: 10,
@@ -49,8 +48,14 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 5,
   },
+  input: {
+    fontSize: 25,
+    margin: 10,
+  },
   searchButton: {
-    
+    alignSelf: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
     height: 50,
     width: 50,
     fontSize: 25,
