@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { StyleSheet, Text,  TextInput,  TouchableOpacity, View, Image } from 'react-native';
 
 const  CitySearchScreen = ({ navigation }) => {
+  
   return (
     <View style={styles.topView}>
       <Text style={styles.mainText}>
@@ -15,7 +16,7 @@ const  CitySearchScreen = ({ navigation }) => {
         <View style={styles.inputView}>
           <TextInput style={styles.input}/>
         </View>
-        <TouchableOpacity style={styles.searchButton}>
+        <TouchableOpacity style={styles.searchButton} onPress={()=>{navigation.navigate('CityResult', {city: 'Paris', population: 2244000})}}>
             <Image 
               source={require('./assets/magnifying-glass.png')} 
               style={{flex: 1, width: '100%', aspectRatio: 1, margin: 10}}
