@@ -3,14 +3,12 @@ import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { StyleSheet, Text,  TextInput,  TouchableOpacity, View, Image } from 'react-native';
 
-const  CityResultScreen = ({ navigation }) => {
+const  CityResultScreen = ({ route }) => {
   
   return (
     <View style={styles.topView}>
       <Text style={styles.mainText}>
-        SEARCH BY 
-        {'\n'}
-        CITY
+          {route.params.city.toUpperCase()}
       </Text>
       
     </View>
