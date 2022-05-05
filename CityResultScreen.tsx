@@ -34,11 +34,15 @@ const styles = StyleSheet.create({
         textAlign: 'center'
       },
       bottomView: {
-        borderColor: '#fad',
+        flex: 1,
+        flexDirection: "column",
+        backgroundColor: '#fff',
+        alignItems: 'center',
       },
       popText: {
         fontSize: 28,
-        margin: 10
+        margin: 10,
+        borderColor: '#fad',
       }
 })
 
