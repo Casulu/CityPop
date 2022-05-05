@@ -4,14 +4,19 @@ import { StyleSheet, Text,  TextInput,  TouchableOpacity, View, Image } from 're
 const  CityResultScreen = ({ route }) => {
 
   return (
-    <View style={styles.topView}>
-      <Text style={styles.mainText}>
-          {route.params.name.toUpperCase()}
-      </Text>
-      <Text style={styles.mainText}>
-          {route.params.population}
-      </Text>
+    <View style={{flex: 1}}>
+      <View style={styles.topView}>
+        <Text style={styles.mainText}>
+            {route.params.name.toUpperCase()}
+        </Text>
+      </View>
+      <View style={styles.bottomView}>
+        <Text style={styles.popText}>
+            {route.params.population}
+        </Text>
+      </View>
     </View>
+    
   );
 }
 
@@ -28,6 +33,13 @@ const styles = StyleSheet.create({
         fontSize: 32,
         textAlign: 'center'
       },
+      bottomView: {
+        borderColor: '#fad',
+      },
+      popText: {
+        fontSize: 28,
+        margin: 10
+      }
 })
 
 export default CityResultScreen;
