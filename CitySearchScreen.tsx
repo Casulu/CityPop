@@ -5,7 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text,  TextInput,  TouchableOpacity, View, Image } from 'react-native';
 import { useState } from 'react';
 
-const cityPopBaseUrl = "http://api.geonames.org/search?username=weknowit&type=json&maxRows=1&fuzzy=0.2&name_equals=";
+const cityPopBaseUrl = "api.geonames.org/search?username=weknowit&type=json&featureClass=P&name=";
 const titleText = 'SEARCH BY\nCITY';
 async function fetchGeoNames(searchTerm: String) : Promise<geoResult>{
   return axios(cityPopBaseUrl + searchTerm).then(response => response.data.geonames[0]);
