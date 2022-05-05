@@ -1,29 +1,47 @@
 import * as React from 'react';
+import axios from 'axios';
+import { geoResult } from './GeoTypes';
 import { StatusBar } from 'expo-status-bar';
-import { NavigationContainer } from '@react-navigation/native';
 import { StyleSheet, Text,  TextInput,  TouchableOpacity, View, Image } from 'react-native';
+import { useState } from 'react';
+
+const cityPopBaseUrl = "http://api.geonames.org/search?username=weknowit&type=json&maxRows=1&fuzzy=0.2&name_equals=";
+const titleText = 'SEARCH BY\nCITY';
+async function fetchGeoNames(searchTerm: String) : Promise<geoResult>{
+  return axios(cityPopBaseUrl + searchTerm).then(response => response.data.geonames[0]);
+}
 
 const  CitySearchScreen = ({ navigation }) => {
-  
+  const [mainText, setMainText] = useState(titleText);
+  const [searchInput, setSearchInput] = useState('');
+
+  const searchClick = async () => {
+    setMainText("LOADING");
+    var fetchResult = await fetchGeoNames(searchInput);
+    setMainText(titleText);
+    return fetchResult;
+  }
+
   return (
     <View style={styles.topView}>
       <Text style={styles.mainText}>
-        SEARCH BY 
-        {'\n'}
-        CITY
+        {mainText}
       </Text>
       <View style={{flex: 2, alignSelf: 'stretch'}}>
         <View style={styles.inputView}>
-          <TextInput style={styles.input}/>
+          <TextInput style={styles.input} onChangeText={setSearchInput}/>
         </View>
-        <TouchableOpacity style={styles.searchButton} onPress={()=>{navigation.navigate('CityResult', {city: 'Paris', population: 2244000})}}>
+        <TouchableOpacity style={styles.searchButton} onPress={async () => {
+          var fetchResult = await searchClick();
+          navigation.navigate('CityResult', {name: fetchResult.name, population: fetchResult.population});
+        }}>
             <Image 
               source={require('./assets/magnifying-glass.png')} 
               style={{flex: 1, width: '100%', aspectRatio: 1, margin: 10}}
             />
           </TouchableOpacity>
       </View>
-      <StatusBar style="auto" />
+      <StatusBar style="auto"/>
     </View>
   );
 }
