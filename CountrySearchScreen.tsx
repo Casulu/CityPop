@@ -3,18 +3,18 @@ import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text,  TextInput,  TouchableOpacity, View, Image } from 'react-native';
 import { useState } from 'react';
-import { CountryListResult } from './GeoTypes';
+import { CityPopResult } from './GeoTypes';
 
-const countryCodeBaseUrl = "http://api.geonames.org/search?username=weknowit&type=json&maxRows=5&featureCode=PCLI&q=";
-const biasedCitySearchBaseUrl= "api.geonames.org/search?username=weknowit&type=json&featureClass=P&maxRows=5&orderby=population&countryBias=";
+const countryCodeBaseUrl = "http://api.geonames.org/search?username=weknowit&type=json&maxRows=3&featureCode=PCLI&q=";
+const biasedCitySearchBaseUrl= "http://api.geonames.org/search?username=weknowit&type=json&featureClass=P&maxRows=5&orderby=population&countryBias=";
 const titleText = 'SEARCH BY\nCOUNTRY';
 
 async function fetchCountryCode(searchTerm: String) : Promise<String>{
-  return axios(countryCodeBaseUrl + searchTerm).then(response => response.data.geonames[0]);
+  return axios(countryCodeBaseUrl + searchTerm).then(response => response.data.geonames[0].countryCode);
 }
 
-async function fetchCityList(countryCode: String) : Promise<CountryListResult>{
-  return axios(biasedCitySearchBaseUrl + countryCode).then(response => response.data.geonames[0]);
+async function fetchCityList(countryCode: String) : Promise<CityPopResult[]>{
+  return axios(biasedCitySearchBaseUrl + countryCode).then(response => response.data.geonames);
 }
 
 const  CountrySearchScreen = ({ navigation }) => {
@@ -33,9 +33,9 @@ const  CountrySearchScreen = ({ navigation }) => {
         <TouchableOpacity style={styles.searchButton} onPress={async () => {
           setMainText("LOADING");
           var countryCode: String = await fetchCountryCode(searchInput);
-          var cities: CountryListResult = await fetchCityList(countryCode);
+          var cities: CityPopResult[] = await fetchCityList(countryCode);
           setMainText(titleText);
-          navigation.navigate('CountryResult', cities);
+          navigation.navigate('CountryResult', {searchTerm: searchInput, searchResult: cities});
         }}>
           <Image 
             source={require('./assets/magnifying-glass.png')} 
