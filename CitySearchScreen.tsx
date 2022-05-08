@@ -1,13 +1,14 @@
 import * as React from 'react';
 import axios from 'axios';
-import { geoResult } from './GeoTypes';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text,  TextInput,  TouchableOpacity, View, Image } from 'react-native';
 import { useState } from 'react';
+import { CityPopResult } from './GeoTypes';
 
 const cityPopBaseUrl = "http://api.geonames.org/search?username=weknowit&type=json&featureClass=P&orderby=population&maxRows=1&name=";
 const titleText = 'SEARCH BY\nCITY';
-async function fetchGeoNames(searchTerm: String) : Promise<geoResult>{
+
+async function fetchCityInfo(searchTerm: String) : Promise<CityPopResult>{
   return axios(cityPopBaseUrl + searchTerm).then(response => response.data.geonames[0]);
 }
 
@@ -17,7 +18,7 @@ const  CitySearchScreen = ({ navigation }) => {
 
   const searchClick = async () => {
     setMainText("LOADING");
-    var fetchResult = await fetchGeoNames(searchInput);
+    var fetchResult = await fetchCityInfo(searchInput);
     setMainText(titleText);
     return fetchResult;
   }
