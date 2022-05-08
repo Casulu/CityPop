@@ -34,7 +34,7 @@ const  CitySearchScreen = ({ navigation }) => {
         </View>
         <TouchableOpacity style={styles.searchButton} onPress={async () => {
           var fetchResult = await searchClick();
-          navigation.navigate('CityResult', {name: fetchResult.name, population: fetchResult.population});
+          navigation.navigate('CityResult', {cityPop: fetchResult});
         }}>
             <Image 
               source={require('./assets/magnifying-glass.png')} 

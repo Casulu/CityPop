@@ -1,18 +1,21 @@
 import * as React from 'react';
 import { StyleSheet, Text,  TextInput,  TouchableOpacity, View, Image } from 'react-native';
+import { CityPopResult } from './GeoTypes';
 
 const  CityResultScreen = ({ route }) => {
+
+  const cityPop: CityPopResult = route.params.cityPop;
 
   return (
     <View style={{flex: 1}}>
       <View style={styles.topView}>
         <Text style={styles.mainText}>
-            {route.params.name.toUpperCase()}
+            {cityPop.name.toUpperCase()}
         </Text>
       </View>
       <View style={styles.bottomView}>
         <Text style={styles.popText}>
-            {route.params.population}
+            {cityPop.population}
         </Text>
       </View>
     </View>
