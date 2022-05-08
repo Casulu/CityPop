@@ -1,4 +1,5 @@
 export interface CityPopResult {
     name: String,
-    population: Number
+    population: number,
+    geonameId: number
 }
