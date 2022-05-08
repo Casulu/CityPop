@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   },
   appTitle: {
     flex: 1,
-    marginTop: 30,
+    marginTop: 55,
     fontSize: 32
   },
   homeButtonContainer: {
