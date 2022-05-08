@@ -1,26 +1,25 @@
 import * as React from 'react';
 import axios from 'axios';
-import { geoResult } from './GeoTypes';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text,  TextInput,  TouchableOpacity, View, Image } from 'react-native';
 import { useState } from 'react';
+import { CountryListResult } from './GeoTypes';
 
-const countryChildrenBaseUrl = "http://api.geonames.org/search?username=weknowit&type=json&featureClass=P&orderby=population&maxRows=1&name=";
+const countryCodeBaseUrl = "http://api.geonames.org/search?username=weknowit&type=json&maxRows=5&featureCode=PCLI&q=";
+const biasedCitySearchBaseUrl= "api.geonames.org/search?username=weknowit&type=json&featureClass=P&maxRows=5&orderby=population&countryBias=";
 const titleText = 'SEARCH BY\nCOUNTRY';
-async function fetchCountryChildren(searchTerm: String) : Promise<geoResult>{
-  return axios(countryChildrenBaseUrl + searchTerm).then(response => response.data.geonames[0]);
+
+async function fetchCountryCode(searchTerm: String) : Promise<String>{
+  return axios(countryCodeBaseUrl + searchTerm).then(response => response.data.geonames[0]);
+}
+
+async function fetchCityList(countryCode: String) : Promise<CountryListResult>{
+  return axios(biasedCitySearchBaseUrl + countryCode).then(response => response.data.geonames[0]);
 }
 
 const  CountrySearchScreen = ({ navigation }) => {
   const [mainText, setMainText] = useState(titleText);
   const [searchInput, setSearchInput] = useState('');
-
-  const searchClick = async () => {
-    setMainText("LOADING");
-    var fetchResult = await fetchCountryChildren(searchInput);
-    setMainText(titleText);
-    return fetchResult;
-  }
 
   return (
     <View style={styles.topView}>
@@ -32,14 +31,17 @@ const  CountrySearchScreen = ({ navigation }) => {
           <TextInput style={styles.input} onChangeText={setSearchInput}/>
         </View>
         <TouchableOpacity style={styles.searchButton} onPress={async () => {
-          var fetchResult = await searchClick();
-          navigation.navigate('CountryResult', {name: fetchResult.name, population: fetchResult.population});
+          setMainText("LOADING");
+          var countryCode: String = await fetchCountryCode(searchInput);
+          var cities: CountryListResult = await fetchCityList(countryCode);
+          setMainText(titleText);
+          navigation.navigate('CountryResult', cities);
         }}>
-            <Image 
-              source={require('./assets/magnifying-glass.png')} 
-              style={{flex: 1, width: '100%', aspectRatio: 1, margin: 10}}
-            />
-          </TouchableOpacity>
+          <Image 
+            source={require('./assets/magnifying-glass.png')} 
+            style={{flex: 1, width: '100%', aspectRatio: 1, margin: 10}}
+          />
+        </TouchableOpacity>
       </View>
       <StatusBar style="auto"/>
     </View>
