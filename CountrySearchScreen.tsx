@@ -3,14 +3,14 @@ import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text,  TextInput,  TouchableOpacity, View, Image } from 'react-native';
 import { useState } from 'react';
-import { CityPopResult } from './GeoTypes';
+import { CityPopResult, CountryLookupResult } from './GeoTypes';
 
 const countryCodeBaseUrl = "http://api.geonames.org/search?username=weknowit&type=json&maxRows=3&featureCode=PCLI&q=";
 const biasedCitySearchBaseUrl= "http://api.geonames.org/search?username=weknowit&type=json&featureClass=P&maxRows=5&orderby=population&countryBias=";
 const titleText = 'SEARCH BY\nCOUNTRY';
 
-async function fetchCountryCode(searchTerm: String) : Promise<String>{
-  return axios(countryCodeBaseUrl + searchTerm).then(response => response.data.geonames[0].countryCode);
+async function fetchCountryCode(searchTerm: String) : Promise<CountryLookupResult | null>{
+  return axios(countryCodeBaseUrl + searchTerm).then(response => response.data.geonames[0]);
 }
 
 async function fetchCityList(countryCode: String) : Promise<CityPopResult[]>{
@@ -20,6 +20,7 @@ async function fetchCityList(countryCode: String) : Promise<CityPopResult[]>{
 const  CountrySearchScreen = ({ navigation }) => {
   const [mainText, setMainText] = useState(titleText);
   const [searchInput, setSearchInput] = useState('');
+  const [searchEnabled, setSearchEnabled] = useState(false);
 
   return (
     <View style={styles.topView}>
@@ -28,14 +29,23 @@ const  CountrySearchScreen = ({ navigation }) => {
       </Text>
       <View style={{flex: 2, alignSelf: 'stretch'}}>
         <View style={styles.inputView}>
-          <TextInput style={styles.input} onChangeText={setSearchInput}/>
+          <TextInput style={styles.input} onChangeText={text => {
+            if(text.length > 0) setSearchEnabled(true);
+            else setSearchEnabled(false);
+            setSearchInput(text);
+          }}/>
         </View>
-        <TouchableOpacity style={styles.searchButton} onPress={async () => {
+        <TouchableOpacity style={{...styles.searchButton, backgroundColor: searchEnabled ? '#fad' : '#ccc',}} disabled={!searchEnabled} onPress={async () => {
           setMainText("LOADING");
-          var countryCode: String = await fetchCountryCode(searchInput);
-          var cities: CityPopResult[] = await fetchCityList(countryCode);
-          setMainText(titleText);
-          navigation.navigate('CountryResult', {searchTerm: searchInput, searchResult: cities});
+          var countryInfo: CountryLookupResult | null = await fetchCountryCode(searchInput);
+          if(countryInfo){
+            var cities: CityPopResult[] = await fetchCityList(countryInfo.countryCode);
+            setMainText(titleText);
+            navigation.navigate('CountryResult', {searchTerm: countryInfo.name, searchResult: cities});
+          } else{
+            setMainText('COUNTRY NOT\nFOUND');
+          }
+          
         }}>
           <Image 
             source={require('./assets/magnifying-glass.png')} 
@@ -81,7 +91,6 @@ const styles = StyleSheet.create({
     width: 50,
     fontSize: 25,
     margin: 10,
-    backgroundColor: '#fad',
     borderRadius: 25,
   }
 })
