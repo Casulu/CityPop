@@ -53,8 +53,7 @@ const styles = StyleSheet.create({
       },
       cityView: {
         flex: 1, 
-        borderColor: '#fad', 
-        borderWidth: 2, 
+        backgroundColor: '#fad', 
         borderRadius: 4,
         margin: 10, 
         height: 1, 
