@@ -17,7 +17,9 @@ const  CountryResultScreen = ({ route }) => {
       <View style={styles.bottomView}>
         { cityList.map((city: CityPopResult) => {
           return (
-            <Text key={city.geonameId} style={styles.popText} >{city.name.toUpperCase()}</Text>
+            <View key={city.geonameId} style={styles.cityView}>
+              <Text style={styles.cityText} >{city.name.toUpperCase()}</Text>
+            </View>
           )
         })}
       </View>
@@ -40,15 +42,26 @@ const styles = StyleSheet.create({
         textAlign: 'center'
       },
       bottomView: {
-        flex: 1,
+        flex: 2,
         flexDirection: "column",
         backgroundColor: '#fff',
-        alignItems: 'center',
+        alignItems: 'stretch',
+        alignSelf: 'stretch',
+        paddingBottom: 20
       },
-      popText: {
-        fontSize: 28,
-        margin: 10,
-        borderColor: '#fad',
+      cityView: {
+        flex: 1, 
+        borderColor: '#fad', 
+        borderWidth: 2, 
+        borderRadius: 4,
+        margin: 10, 
+        height: 1, 
+        alignContent: 'center', 
+        justifyContent: 'center'
+      },
+      cityText: {
+        fontSize: 15,
+        textAlign: 'center'
       }
 })
 
