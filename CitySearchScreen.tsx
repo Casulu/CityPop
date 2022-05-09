@@ -8,19 +8,17 @@ import { CityPopResult } from './GeoTypes';
 const cityPopBaseUrl = "http://api.geonames.org/search?username=weknowit&type=json&featureClass=P&orderby=population&maxRows=1&name=";
 const titleText = 'SEARCH BY\nCITY';
 
-async function fetchCityInfo(searchTerm: String) : Promise<CityPopResult>{
+async function fetchCityInfo(searchTerm: String) : Promise<CityPopResult | null>{
   return axios(cityPopBaseUrl + searchTerm).then(response => response.data.geonames[0]);
 }
 
 const  CitySearchScreen = ({ navigation }) => {
   const [mainText, setMainText] = useState(titleText);
   const [searchInput, setSearchInput] = useState('');
+  const [searchEnabled, setSearchEnabled] = useState(false);
 
   const searchClick = async () => {
-    setMainText("LOADING");
-    var fetchResult = await fetchCityInfo(searchInput);
-    setMainText(titleText);
-    return fetchResult;
+    
   }
 
   return (
@@ -30,11 +28,21 @@ const  CitySearchScreen = ({ navigation }) => {
       </Text>
       <View style={{flex: 2, alignSelf: 'stretch'}}>
         <View style={styles.inputView}>
-          <TextInput style={styles.input} onChangeText={setSearchInput}/>
+          <TextInput style={styles.input} onChangeText={text => {
+            if(text.length > 0) setSearchEnabled(true);
+            else setSearchEnabled(false);
+            setSearchInput(text);
+          }}/>
         </View>
-        <TouchableOpacity style={styles.searchButton} onPress={async () => {
-          var fetchResult = await searchClick();
-          navigation.navigate('CityResult', {cityPop: fetchResult});
+        <TouchableOpacity style={{...styles.searchButton, backgroundColor: searchEnabled ? '#fad' : '#ccc'}} disabled={!searchEnabled} onPress={async () => {
+          setMainText("LOADING");
+          const cityInfo: CityPopResult | null = await fetchCityInfo(searchInput);
+          if(cityInfo){
+            setMainText(titleText);
+            navigation.navigate('CityResult', {cityPop: cityInfo});
+          } else{
+            setMainText('CITY NOT\nFOUND')
+          }
         }}>
             <Image 
               source={require('./assets/magnifying-glass.png')} 
