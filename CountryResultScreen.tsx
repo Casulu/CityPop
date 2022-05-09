@@ -2,7 +2,7 @@ import * as React from 'react';
 import { StyleSheet, Text,  TextInput,  TouchableOpacity, View, Image } from 'react-native';
 import { CityPopResult } from './GeoTypes';
 
-const  CountryResultScreen = ({ route }) => {
+const  CountryResultScreen = ({ navigation, route }) => {
 
   const cityList: CityPopResult[] = route.params.searchResult;
   const countryName: String = route.params.searchTerm;
@@ -17,9 +17,11 @@ const  CountryResultScreen = ({ route }) => {
       <View style={styles.bottomView}>
         { cityList.map((city: CityPopResult) => {
           return (
-            <View key={city.geonameId} style={styles.cityView}>
+            <TouchableOpacity key={city.geonameId} style={styles.cityView} onPress={() => {
+              navigation.navigate('CityResult', {cityPop: city})
+            }}>
               <Text style={styles.cityText} >{city.name.toUpperCase()}</Text>
-            </View>
+            </TouchableOpacity>
           )
         })}
       </View>
