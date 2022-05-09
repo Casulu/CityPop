@@ -35,7 +35,7 @@ const  CountrySearchScreen = ({ navigation }) => {
             setSearchInput(text);
           }}/>
         </View>
-        <TouchableOpacity style={{...styles.searchButton, backgroundColor: searchEnabled ? '#fad' : '#ccc',}} disabled={!searchEnabled} onPress={async () => {
+        <TouchableOpacity style={{...styles.searchButton, backgroundColor: searchEnabled ? '#fad' : '#ccc'}} disabled={!searchEnabled} onPress={async () => {
           setMainText("LOADING");
           var countryInfo: CountryLookupResult | null = await fetchCountryCode(searchInput);
           if(countryInfo){
