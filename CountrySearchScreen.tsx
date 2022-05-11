@@ -1,7 +1,7 @@
 import * as React from 'react';
 import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, Pressable, TextInput,  TouchableOpacity, View, Image, Modal } from 'react-native';
+import { StyleSheet, Text, TextInput,  TouchableOpacity, View, Image} from 'react-native';
 import { useState } from 'react';
 import { CityPopResult, CountryLookupResult } from './GeoTypes';
 
@@ -12,7 +12,7 @@ const titleText = 'SEARCH BY\nCOUNTRY';
 async function fetchCountryCode(searchTerm: String) : Promise<CountryLookupResult>{
   return axios(countryCodeBaseUrl + searchTerm).then(response => {
     if(response.data.geonames.length === 0){
-      throw new Error("No country was found");
+      throw new Error("No country was found using the given search term");
     }
     return response.data.geonames[0];
   });
