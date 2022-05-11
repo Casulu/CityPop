@@ -1,7 +1,7 @@
 import * as React from 'react';
 import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text,  TextInput,  TouchableOpacity, View, Image, Modal } from 'react-native';
+import { StyleSheet, Text, Pressable, TextInput,  TouchableOpacity, View, Image, Modal } from 'react-native';
 import { useState } from 'react';
 import { CityPopResult, CountryLookupResult } from './GeoTypes';
 
@@ -23,7 +23,7 @@ async function fetchCityList(countryCode: String) : Promise<CityPopResult[]>{
     if(response.data.geonames.length === 0){
       throw new Error("No cities were found for the given country");
     }
-    return response.data.geonames[0];
+    return response.data.geonames;
   });
 }
 
@@ -31,13 +31,16 @@ const  CountrySearchScreen = ({ navigation }) => {
   const [mainText, setMainText] = useState(titleText);
   const [searchInput, setSearchInput] = useState('');
   const [searchEnabled, setSearchEnabled] = useState(false);
-  const [modalInfo, setModalInfo] = useState({visible: false, text: ''});
+  const [error, setError] = useState(null);
 
   return (
     <View style={styles.container}>
       <Text style={styles.mainText}>
         {mainText}
       </Text>
+      {error !== null && <Text>
+        {error}
+      </Text>}
       <View style={{flex: 2, alignSelf: 'stretch'}}>
         <View style={styles.inputView}>
           <TextInput style={styles.input} onChangeText={text => {
@@ -51,13 +54,14 @@ const  CountrySearchScreen = ({ navigation }) => {
           fetchCountryCode(searchInput).then(codeRes => {
             fetchCityList(codeRes.countryCode).then(cities => {
               setMainText(titleText);
+              setError(null);
               navigation.navigate('CountryResult', {searchTerm: codeRes.name, searchResult: cities})
             }).catch(citiesError => {
-              console.error(citiesError);
+              setError(citiesError.message);
               setMainText(titleText);
             })
           }).catch(codeError => {
-            console.error(codeError);
+            setError(codeError.message);
             setMainText(titleText);
           });
         }}>
