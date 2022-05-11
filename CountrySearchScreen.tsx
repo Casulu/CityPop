@@ -1,7 +1,7 @@
 import * as React from 'react';
 import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text,  TextInput,  TouchableOpacity, View, Image } from 'react-native';
+import { StyleSheet, Text,  TextInput,  TouchableOpacity, View, Image, Modal } from 'react-native';
 import { useState } from 'react';
 import { CityPopResult, CountryLookupResult } from './GeoTypes';
 
@@ -11,15 +11,19 @@ const titleText = 'SEARCH BY\nCOUNTRY';
 
 async function fetchCountryCode(searchTerm: String) : Promise<CountryLookupResult>{
   return axios(countryCodeBaseUrl + searchTerm).then(response => {
-    if(response.data.geonames.length() === 0) Promise.reject(new Error("No country was found"));
+    if(response.data.geonames.length === 0){
+      throw new Error("No country was found");
+    }
     return response.data.geonames[0];
   });
 }
 
 async function fetchCityList(countryCode: String) : Promise<CityPopResult[]>{
   return axios(biasedCitySearchBaseUrl + countryCode).then(response => {
-    if(response.data.geonames.length() === 0) Promise.reject(new Error("No cities were found for the given country"));
-    return response.data.geonames;
+    if(response.data.geonames.length === 0){
+      throw new Error("No cities were found for the given country");
+    }
+    return response.data.geonames[0];
   });
 }
 
@@ -27,9 +31,10 @@ const  CountrySearchScreen = ({ navigation }) => {
   const [mainText, setMainText] = useState(titleText);
   const [searchInput, setSearchInput] = useState('');
   const [searchEnabled, setSearchEnabled] = useState(false);
+  const [modalInfo, setModalInfo] = useState({visible: false, text: ''});
 
   return (
-    <View style={styles.topView}>
+    <View style={styles.container}>
       <Text style={styles.mainText}>
         {mainText}
       </Text>
@@ -43,15 +48,18 @@ const  CountrySearchScreen = ({ navigation }) => {
         </View>
         <TouchableOpacity style={{...styles.searchButton, backgroundColor: searchEnabled ? '#fad' : '#ccc'}} disabled={!searchEnabled} onPress={async () => {
           setMainText("LOADING");
-          var countryInfo: CountryLookupResult | void = await fetchCountryCode(searchInput).catch(error => console.log(error));
-          if(countryInfo){
-            var cities: CityPopResult[] | void = await fetchCityList(countryInfo.countryCode).catch(error => console.log(error));
+          fetchCountryCode(searchInput).then(codeRes => {
+            fetchCityList(codeRes.countryCode).then(cities => {
+              setMainText(titleText);
+              navigation.navigate('CountryResult', {searchTerm: codeRes.name, searchResult: cities})
+            }).catch(citiesError => {
+              console.error(citiesError);
+              setMainText(titleText);
+            })
+          }).catch(codeError => {
+            console.error(codeError);
             setMainText(titleText);
-            navigation.navigate('CountryResult', {searchTerm: countryInfo.name, searchResult: cities});
-          } else{
-            setMainText('COUNTRY NOT\nFOUND');
-          }
-          
+          });
         }}>
           <Image 
             source={require('./assets/magnifying-glass.png')} 
@@ -65,7 +73,7 @@ const  CountrySearchScreen = ({ navigation }) => {
 }
 
 const styles = StyleSheet.create({
-  topView: {
+  container: {
     flex: 1,
     flexDirection: "column",
     backgroundColor: '#fff',
