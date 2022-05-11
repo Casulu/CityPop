@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { CityPopResult, CountryLookupResult } from './GeoTypes';
 
 const countryCodeBaseUrl = "http://api.geonames.org/search?username=weknowit&type=json&maxRows=3&featureCode=PCLI&q=";
-const biasedCitySearchBaseUrl= "http://api.geonames.org/search?username=weknowit&type=json&featureClass=P&maxRows=5&orderby=population&countryBias=";
+const biasedCitySearchBaseUrl= "http://api.geonames.org/search?username=weknowit&type=json&featureClass=P&maxRows=3&orderby=population&countryBias=";
 const titleText = 'SEARCH BY\nCOUNTRY';
 
 async function fetchCountryCode(searchTerm: String) : Promise<CountryLookupResult>{
@@ -27,6 +27,12 @@ async function fetchCityList(countryCode: String) : Promise<CityPopResult[]>{
   });
 }
 
+/**
+ * The screen for searching for a countries most popylated cities
+ * @param param0 Uses the navigation prop from react navigation to navigate
+ * to the result screen
+ * @returns The country search screen hook
+ */
 const  CountrySearchScreen = ({ navigation }) => {
   const [mainText, setMainText] = useState(titleText);
   const [searchInput, setSearchInput] = useState('');
