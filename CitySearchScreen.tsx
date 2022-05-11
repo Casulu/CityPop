@@ -9,23 +9,28 @@ const cityPopBaseUrl = "http://api.geonames.org/search?username=weknowit&type=js
 const titleText = 'SEARCH BY\nCITY';
 
 async function fetchCityInfo(searchTerm: String) : Promise<CityPopResult | null>{
-  return axios(cityPopBaseUrl + searchTerm).then(response => response.data.geonames[0]);
+  return axios(cityPopBaseUrl + searchTerm).then(response => {
+    if(response.data.geonames.length === 0){
+      throw new Error("No city was found using the given search term");
+    }
+    return response.data.geonames[0];
+  });
 }
 
 const  CitySearchScreen = ({ navigation }) => {
   const [mainText, setMainText] = useState(titleText);
   const [searchInput, setSearchInput] = useState('');
   const [searchEnabled, setSearchEnabled] = useState(false);
-
-  const searchClick = async () => {
-    
-  }
+  const [error, setError] = useState(null);
 
   return (
     <View style={styles.topView}>
       <Text style={styles.mainText}>
         {mainText}
       </Text>
+      {error !== null && <Text>
+        {error}
+      </Text>}
       <View style={{flex: 2, alignSelf: 'stretch'}}>
         <View style={styles.inputView}>
           <TextInput style={styles.input} onChangeText={text => {
@@ -36,19 +41,20 @@ const  CitySearchScreen = ({ navigation }) => {
         </View>
         <TouchableOpacity style={{...styles.searchButton, backgroundColor: searchEnabled ? '#fad' : '#ccc'}} disabled={!searchEnabled} onPress={async () => {
           setMainText("LOADING");
-          const cityInfo: CityPopResult | null = await fetchCityInfo(searchInput);
-          if(cityInfo){
+          fetchCityInfo(searchInput).then(result => {
             setMainText(titleText);
-            navigation.navigate('CityResult', {cityPop: cityInfo});
-          } else{
-            setMainText('CITY NOT\nFOUND')
-          }
+            setError(null);
+            navigation.navigate('CityResult', {cityPop: result});
+          }).catch(error => {
+            setError(error.message);
+            setMainText(titleText);
+          });
         }}>
-            <Image 
-              source={require('./assets/magnifying-glass.png')} 
-              style={{flex: 1, width: '100%', aspectRatio: 1, margin: 10}}
-            />
-          </TouchableOpacity>
+          <Image 
+            source={require('./assets/magnifying-glass.png')} 
+            style={{flex: 1, width: '100%', aspectRatio: 1, margin: 10}}
+          />
+        </TouchableOpacity>
       </View>
       <StatusBar style="auto"/>
     </View>
