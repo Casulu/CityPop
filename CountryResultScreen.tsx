@@ -44,19 +44,18 @@ const styles = StyleSheet.create({
         textAlign: 'center'
       },
       bottomView: {
-        flex: 2,
+        flex: 1,
         flexDirection: "column",
         backgroundColor: '#fff',
         alignItems: 'stretch',
         alignSelf: 'stretch',
-        paddingBottom: 20
+        paddingBottom: '40%'
       },
       cityView: {
         flex: 1, 
         backgroundColor: '#fad', 
         borderRadius: 4,
         margin: 10, 
-        height: 1, 
         alignContent: 'center', 
         justifyContent: 'center'
       },
