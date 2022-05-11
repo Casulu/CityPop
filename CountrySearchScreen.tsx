@@ -9,12 +9,18 @@ const countryCodeBaseUrl = "http://api.geonames.org/search?username=weknowit&typ
 const biasedCitySearchBaseUrl= "http://api.geonames.org/search?username=weknowit&type=json&featureClass=P&maxRows=5&orderby=population&countryBias=";
 const titleText = 'SEARCH BY\nCOUNTRY';
 
-async function fetchCountryCode(searchTerm: String) : Promise<CountryLookupResult | null>{
-  return axios(countryCodeBaseUrl + searchTerm).then(response => response.data.geonames[0]);
+async function fetchCountryCode(searchTerm: String) : Promise<CountryLookupResult>{
+  return axios(countryCodeBaseUrl + searchTerm).then(response => {
+    if(response.data.geonames.length() === 0) Promise.reject(new Error("No country was found"));
+    return response.data.geonames[0];
+  });
 }
 
 async function fetchCityList(countryCode: String) : Promise<CityPopResult[]>{
-  return axios(biasedCitySearchBaseUrl + countryCode).then(response => response.data.geonames);
+  return axios(biasedCitySearchBaseUrl + countryCode).then(response => {
+    if(response.data.geonames.length() === 0) Promise.reject(new Error("No cities were found for the given country"));
+    return response.data.geonames;
+  });
 }
 
 const  CountrySearchScreen = ({ navigation }) => {
@@ -37,9 +43,9 @@ const  CountrySearchScreen = ({ navigation }) => {
         </View>
         <TouchableOpacity style={{...styles.searchButton, backgroundColor: searchEnabled ? '#fad' : '#ccc'}} disabled={!searchEnabled} onPress={async () => {
           setMainText("LOADING");
-          var countryInfo: CountryLookupResult | null = await fetchCountryCode(searchInput);
+          var countryInfo: CountryLookupResult | void = await fetchCountryCode(searchInput).catch(error => console.log(error));
           if(countryInfo){
-            var cities: CityPopResult[] = await fetchCityList(countryInfo.countryCode);
+            var cities: CityPopResult[] | void = await fetchCityList(countryInfo.countryCode).catch(error => console.log(error));
             setMainText(titleText);
             navigation.navigate('CountryResult', {searchTerm: countryInfo.name, searchResult: cities});
           } else{
