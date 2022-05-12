@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { common } from './CommonStyles';
 import { CityPopResult } from './GeoTypes';
 
 /**
@@ -16,7 +17,7 @@ const  CityResultScreen = ({ route }) => {
   return (
     <View style={{flex: 1}}>
       <View style={styles.topView}>
-        <Text style={styles.mainText}>
+        <Text style={common.titleText}>
             {cityPop.name.toUpperCase()}
         </Text>
       </View>
