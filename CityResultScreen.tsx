@@ -65,7 +65,8 @@ const styles = StyleSheet.create({
       popText: {
         textAlign: 'center',
         fontSize: 28,
-        margin: 10,
+        marginTop: 20,
+        marginBottom: 30,
         borderColor: '#fad',
       }
 })
