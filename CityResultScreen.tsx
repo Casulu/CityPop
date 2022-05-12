@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
       popView: {
         margin: 10,
         borderRadius: 4,
+        marginTop: '15%',
         alignSelf: 'stretch',
         alignItems: 'center',
         justifyContent: 'center',

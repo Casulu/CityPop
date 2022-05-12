@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     margin: 10,
     borderColor: '#fad',
     borderWidth: 2,
-    borderRadius: 5,
+    borderRadius: 4,
   },
   input: {
     fontSize: 25,
