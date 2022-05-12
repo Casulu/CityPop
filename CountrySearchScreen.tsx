@@ -5,10 +5,19 @@ import { StyleSheet, Text, TextInput,  TouchableOpacity, View, Image} from 'reac
 import { useState } from 'react';
 import { CityPopResult, CountryLookupResult } from './GeoTypes';
 
-const countryCodeBaseUrl = "http://api.geonames.org/search?username=weknowit&type=json&maxRows=3&featureCode=PCLI&q=";
+//Base api url for checking if a search term can be interpreted as a valid country. Only fetches
+//the best result
+const countryCodeBaseUrl = "http://api.geonames.org/search?username=weknowit&type=json&maxRows=1&featureCode=PCLI&q=";
+//Base api url for finding a given country's most ppulated cities. Sorts results by population and 
+//displays given country codes cities first
 const biasedCitySearchBaseUrl= "http://api.geonames.org/search?username=weknowit&type=json&featureClass=P&maxRows=3&orderby=population&countryBias=";
 const titleText = 'SEARCH BY\nCOUNTRY';
 
+/**
+ * Fetches the name and country code which best matches the search term given.
+ * @param searchTerm The term to search using
+ * @returns A promise containing a CoutnryLookupResult
+ */
 async function fetchCountryCode(searchTerm: String) : Promise<CountryLookupResult>{
   return axios(countryCodeBaseUrl + searchTerm).then(response => {
     if(response.data.geonames.length === 0){
@@ -18,9 +27,15 @@ async function fetchCountryCode(searchTerm: String) : Promise<CountryLookupResul
   });
 }
 
+/**
+ * Fetches the top 3 most populated cities in the country with the given
+ * country code.
+ * @param countryCode The country code of the country to search in
+ * @returns A promise containing a list of up to 3 CityPopResults
+ */
 async function fetchCityList(countryCode: String) : Promise<CityPopResult[]>{
   return axios(biasedCitySearchBaseUrl + countryCode).then(response => {
-    if(response.data.geonames.length === 0){
+    if(response.data.geonames.length === 0){ //If no results are returned
       throw new Error("No cities were found for the given country");
     }
     return response.data.geonames;
@@ -28,7 +43,8 @@ async function fetchCityList(countryCode: String) : Promise<CityPopResult[]>{
 }
 
 /**
- * The screen for searching for a countries most popylated cities
+ * The screen for searching for a countries most populated cities. Links to the country 
+ * result screen and uses the navigation stack to return to the home screen.
  * @param param0 Uses the navigation prop from react navigation to navigate
  * to the result screen
  * @returns The country search screen hook
@@ -44,6 +60,7 @@ const  CountrySearchScreen = ({ navigation }) => {
       <Text style={styles.mainText}>
         {mainText}
       </Text>
+      {/* Displays error text if an error is present */}
       {error !== null && <Text>
         {error}
       </Text>}
@@ -57,10 +74,13 @@ const  CountrySearchScreen = ({ navigation }) => {
         </View>
         <TouchableOpacity style={{...styles.searchButton, backgroundColor: searchEnabled ? '#fad' : '#ccc'}} disabled={!searchEnabled} onPress={async () => {
           setMainText("LOADING");
+          //First fetches the country code
           fetchCountryCode(searchInput).then(codeRes => {
+            //If a country code is found then it is used to fetch a list of cities
             fetchCityList(codeRes.countryCode).then(cities => {
               setMainText(titleText);
               setError(null);
+              //Navigate to the result screen using the fetch results
               navigation.navigate('CountryResult', {searchTerm: codeRes.name, searchResult: cities})
             }).catch(citiesError => {
               setError(citiesError.message);

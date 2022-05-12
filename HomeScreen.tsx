@@ -1,8 +1,14 @@
 import * as React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { NavigationContainer } from '@react-navigation/native';
 import { StyleSheet, Text,  TouchableOpacity, View } from 'react-native';
 
+/**
+ * Defines the home screen of the app. HAs two buttons which lead to the two
+ * different functionalities of the app.
+ * @param param0 Uses the navigation prop from react navigation for navigating
+ * to other screens.
+ * @returns The home screen hook
+ */
 const  HomeScreen = ({ navigation }) => {
   return (
       <View style={styles.container}>

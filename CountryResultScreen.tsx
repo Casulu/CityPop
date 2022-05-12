@@ -1,7 +1,15 @@
 import * as React from 'react';
-import { StyleSheet, Text,  TextInput,  TouchableOpacity, View, Image } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View,  } from 'react-native';
 import { CityPopResult } from './GeoTypes';
 
+/**
+ * The screen which displays a countries top 3 populated cities. Links to the city result
+ * screen through each city button and uses the navigation stack to return to the search screen.
+ * @param param0 Uses the navigation prop and the route prop from react navigate
+ * to both link to the city result screen and for retrieving paramaters from the cuontry
+ * search screen
+ * @returns The coutnry result hook
+ */
 const  CountryResultScreen = ({ navigation, route }) => {
 
   const cityList: CityPopResult[] = route.params.searchResult;
@@ -15,6 +23,7 @@ const  CountryResultScreen = ({ navigation, route }) => {
         </Text>
       </View>
       <View style={styles.bottomView}>
+        {/* Creates a touchable for each city which each links to the city result screen */}
         { cityList.map((city: CityPopResult) => {
           return (
             <TouchableOpacity key={city.geonameId} style={styles.cityView} onPress={() => {

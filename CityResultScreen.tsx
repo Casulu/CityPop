@@ -1,9 +1,16 @@
 import * as React from 'react';
-import { StyleSheet, Text,  TextInput,  TouchableOpacity, View, Image } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { CityPopResult } from './GeoTypes';
 
+/**
+ * The screen which displays a city's population. Links back to the previous screen using
+ * the navigation stack
+ * @param param0 Uses the route prop from react navigation to retrieve which population
+ * is to be displayed.
+ * @returns The city result screen hook
+ */
 const  CityResultScreen = ({ route }) => {
-
+  //Get the paramater sent to the screen
   const cityPop: CityPopResult = route.params.cityPop;
 
   return (

@@ -9,12 +9,17 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator();
 
-//https://reactnavigation.org/docs/typescript/
 
+/**
+ * Entry point for the react app. Defines all screens in the app along with each
+ * screens displayed title for the navigation bar.
+ * @returns Top component for the app
+ */
 const App = () => {
 
   return (
     <NavigationContainer>
+      {/*Changes background color and shadow style to match the wireframe design*/}
       <Stack.Navigator screenOptions={{ 
         headerStyle: {backgroundColor: '#fff'},
         headerShadowVisible: false, 
