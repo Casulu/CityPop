@@ -29,7 +29,7 @@ const  CountryResultScreen = ({ navigation, route }) => {
             <TouchableOpacity key={city.geonameId} style={styles.cityView} onPress={() => {
               navigation.navigate('CityResult', {cityPop: city})
             }}>
-              <Text style={styles.cityText} >{city.name.toUpperCase()}</Text>
+              <Text style={styles.cityText} >{city.name}</Text>
             </TouchableOpacity>
           )
         })}
