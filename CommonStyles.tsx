@@ -6,6 +6,13 @@ export const common = StyleSheet.create({
         fontSize: 32,
         textAlign: 'center'
     },
+    button: {
+        backgroundColor: '#fad', 
+        borderRadius: 4,
+        margin: 10, 
+        alignContent: 'center', 
+        justifyContent: 'center'
+    },
     buttonText: {
         fontSize: 15,
         textAlign: 'center'

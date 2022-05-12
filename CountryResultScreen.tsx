@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View,  } from 'react-native';
 import { CityPopResult } from './GeoTypes';
+import { common } from './CommonStyles';
 
 /**
  * The screen which displays a countries top 3 populated cities. Links to the city result
@@ -18,7 +19,7 @@ const  CountryResultScreen = ({ navigation, route }) => {
   return (
     <View style={{flex: 1}}>
       <View style={styles.topView}>
-        <Text style={styles.mainText}>
+        <Text style={common.titleText}>
             {countryName.toUpperCase()}
         </Text>
       </View>
@@ -26,10 +27,10 @@ const  CountryResultScreen = ({ navigation, route }) => {
         {/* Creates a touchable for each city which each links to the city result screen */}
         { cityList.map((city: CityPopResult) => {
           return (
-            <TouchableOpacity key={city.geonameId} style={styles.cityView} onPress={() => {
+            <TouchableOpacity key={city.geonameId} style={{...common.button, flex: 1}} onPress={() => {
               navigation.navigate('CityResult', {cityPop: city})
             }}>
-              <Text style={styles.cityText} >{city.name}</Text>
+              <Text style={common.buttonText} >{city.name.toUpperCase()}</Text>
             </TouchableOpacity>
           )
         })}
@@ -46,12 +47,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
       },
-      mainText: {
-        flex: 1,
-        marginTop: '15%',
-        fontSize: 32,
-        textAlign: 'center'
-      },
       bottomView: {
         flex: 1,
         flexDirection: "column",
@@ -59,18 +54,6 @@ const styles = StyleSheet.create({
         alignItems: 'stretch',
         alignSelf: 'stretch',
         paddingBottom: '40%'
-      },
-      cityView: {
-        flex: 1, 
-        backgroundColor: '#fad', 
-        borderRadius: 4,
-        margin: 10, 
-        alignContent: 'center', 
-        justifyContent: 'center'
-      },
-      cityText: {
-        fontSize: 15,
-        textAlign: 'center'
       }
 })
 
